@@ -8,7 +8,7 @@ import { useTemplates } from '../hooks/useTemplates';
 import { useAssetUpload } from '../hooks/useAssetUpload';
 import { useJobCreate } from '../hooks/useJobCreate';
 import { useJobStatus } from '../hooks/useJobStatus';
-import { Video, RefreshCw } from 'lucide-react';
+import { Video, ArrowLeft } from 'lucide-react';
 
 const MARKETS = [
   { value: 'japan', label: 'Japan' },
@@ -145,6 +145,32 @@ function GeneratePage() {
   // Right Sidebar Content
   const rightSidebarContent = selectedTemplate && (
     <div className="space-y-4">
+      {/* Template Preview */}
+      <Card>
+        <h3 className="text-sm font-semibold text-text-primary mb-3">
+          Template Preview
+        </h3>
+        {selectedTemplate.previewImageUrl ? (
+          <img
+            src={selectedTemplate.previewImageUrl}
+            alt={`${selectedTemplate.name} preview`}
+            className="w-full rounded-md border border-border-subtle"
+          />
+        ) : (
+          <div className="w-full aspect-[9/16] bg-bg-tertiary rounded-md border border-border-subtle flex items-center justify-center">
+            <div className="text-center p-4">
+              <Video className="w-12 h-12 text-text-tertiary mx-auto mb-2" />
+              <p className="text-xs text-text-tertiary">
+                {selectedTemplate.name}
+              </p>
+              <p className="text-xs text-text-tertiary mt-1">
+                {selectedTemplate.duration}s • {selectedTemplate.slots.length} slots
+              </p>
+            </div>
+          </div>
+        )}
+      </Card>
+
       <Card>
         <h3 className="text-sm font-semibold text-text-primary mb-3">
           Template Info
@@ -205,8 +231,8 @@ function GeneratePage() {
             onClick={handleReset}
             className="flex items-center gap-2"
           >
-            <RefreshCw className="w-4 h-4" />
-            Reset
+            <ArrowLeft className="w-4 h-4" />
+            Back to Selection
           </Button>
         )
       }
