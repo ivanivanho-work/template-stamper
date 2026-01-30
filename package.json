@@ -18,11 +18,12 @@
     "test": "vitest"
   },
   "dependencies": {
+    "firebase": "^10.7.2",
+    "lucide-react": "^0.563.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.0",
-    "firebase": "^10.7.2",
-    "react-dropzone": "^14.2.3"
+    "react-dropzone": "^14.2.3",
+    "react-router-dom": "^6.21.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
