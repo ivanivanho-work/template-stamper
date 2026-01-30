@@ -4,8 +4,9 @@ import { db } from '../lib/firebase';
 
 export interface AssetMapping {
   slotId: string;
-  storageUrl: string;
+  storageUrl?: string;
   type: string;
+  textValue?: string;
 }
 
 export interface CreateJobParams {

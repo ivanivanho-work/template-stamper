@@ -18,7 +18,7 @@ export interface Template {
 export interface TemplateSlot {
   slotId: string;
   label: string;
-  type: 'image' | 'video';
+  type: 'image' | 'video' | 'text';
   description?: string;
   required: boolean;
 }

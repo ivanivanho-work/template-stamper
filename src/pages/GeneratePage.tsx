@@ -37,6 +37,7 @@ function GeneratePage() {
         selectedTemplate.slots.map((slot) => ({
           slotId: slot.slotId,
           file: null,
+          textValue: null,
         }))
       );
     }
@@ -54,6 +55,12 @@ function GeneratePage() {
     );
   };
 
+  const handleTextChanged = (slotId: string, value: string) => {
+    setSlotAssets((prev) =>
+      prev.map((sa) => (sa.slotId === slotId ? { ...sa, textValue: value } : sa))
+    );
+  };
+
   const handleReset = () => {
     setSelectedTemplateId(null);
     setSlotAssets([]);
@@ -67,7 +74,7 @@ function GeneratePage() {
       // Generate a project ID
       const projectId = `project_${Date.now()}`;
 
-      // Upload all assets
+      // Upload file assets (images/videos)
       const assetsToUpload = slotAssets
         .filter((sa) => sa.file !== null)
         .map((sa) => ({
@@ -78,12 +85,27 @@ function GeneratePage() {
 
       const uploadedAssets = await uploadMultiple(assetsToUpload, projectId);
 
-      // Create job
-      const assetMappings = uploadedAssets.map((asset) => ({
-        slotId: asset.slotId,
-        storageUrl: asset.storageUrl!,
-        type: asset.file.type,
-      }));
+      // Create asset mappings (combining uploaded files + text values)
+      const assetMappings = slotAssets.map((slotAsset) => {
+        const slot = selectedTemplate.slots.find((s) => s.slotId === slotAsset.slotId);
+
+        if (slot?.type === 'text') {
+          // For text slots, store the text value directly
+          return {
+            slotId: slotAsset.slotId,
+            type: 'text',
+            textValue: slotAsset.textValue || '',
+          };
+        } else {
+          // For file slots, use the uploaded storage URL
+          const uploadedAsset = uploadedAssets.find((ua) => ua.slotId === slotAsset.slotId);
+          return {
+            slotId: slotAsset.slotId,
+            storageUrl: uploadedAsset?.storageUrl || '',
+            type: uploadedAsset?.file.type || slot?.type || 'unknown',
+          };
+        }
+      });
 
       const jobId = await createJob({
         templateId: selectedTemplate.id,
@@ -103,7 +125,13 @@ function GeneratePage() {
     const requiredSlots = selectedTemplate.slots.filter((s) => s.required);
     return requiredSlots.every((slot) => {
       const slotAsset = slotAssets.find((sa) => sa.slotId === slot.slotId);
-      return slotAsset?.file !== null;
+      if (!slotAsset) return false;
+
+      // Check based on slot type
+      if (slot.type === 'text') {
+        return !!slotAsset.textValue && slotAsset.textValue.trim().length > 0;
+      }
+      return slotAsset.file !== null;
     });
   };
 
@@ -218,6 +246,7 @@ function GeneratePage() {
               slotAssets={slotAssets}
               onAssetAdded={handleAssetAdded}
               onAssetRemoved={handleAssetRemoved}
+              onTextChanged={handleTextChanged}
               disabled={uploading || creating}
             />
 
