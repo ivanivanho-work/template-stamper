@@ -29,6 +29,7 @@ export function useTemplates() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('[useTemplates] Starting template fetch...');
     setLoading(true);
     setError(null);
 
@@ -39,11 +40,15 @@ export function useTemplates() {
       orderBy('createdAt', 'desc')
     );
 
+    console.log('[useTemplates] Setting up Firestore listener...');
+
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
+        console.log(`[useTemplates] Received ${snapshot.docs.length} templates from Firestore`);
         const templatesData = snapshot.docs.map((doc) => {
           const data = doc.data();
+          console.log(`[useTemplates] Template: ${doc.id}`, data);
           return {
             id: doc.id,
             name: data.name,
@@ -57,16 +62,21 @@ export function useTemplates() {
             createdAt: data.createdAt?.toDate() || new Date(),
           };
         });
+        console.log('[useTemplates] Processed templates:', templatesData);
         setTemplates(templatesData);
         setLoading(false);
       },
       (err) => {
+        console.error('[useTemplates] Error fetching templates:', err);
         setError(err.message);
         setLoading(false);
       }
     );
 
-    return () => unsubscribe();
+    return () => {
+      console.log('[useTemplates] Cleaning up listener');
+      unsubscribe();
+    };
   }, []);
 
   return {
