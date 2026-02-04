@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { AppLayout } from '../layouts/AppLayout';
 import { Card, Badge, Button } from '../components/ui';
 import {
@@ -888,7 +888,7 @@ const VideoPlayerComponent: React.FC = () => {
 };
 
 // Reference Tab
-const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = ({ copyToClipboard }) => (
+const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = () => (
   <div className="space-y-6">
     {/* Video Preview Section */}
     <Card>
@@ -994,15 +994,15 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = ({ c
               <div className="mb-4">
                 <h5 className="text-sm font-semibold text-text-primary mb-2">Asset Slots (9 total):</h5>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline">gridImage1</Badge>
-                  <Badge variant="outline">gridImage2</Badge>
-                  <Badge variant="outline">gridImage3</Badge>
-                  <Badge variant="outline">gridImage4</Badge>
-                  <Badge variant="outline">gridImage5</Badge>
-                  <Badge variant="outline">gridImage6</Badge>
-                  <Badge variant="outline">gridImage7</Badge>
-                  <Badge variant="outline">gridImage8</Badge>
-                  <Badge variant="outline">gridImage9</Badge>
+                  <Badge>gridImage1</Badge>
+                  <Badge>gridImage2</Badge>
+                  <Badge>gridImage3</Badge>
+                  <Badge>gridImage4</Badge>
+                  <Badge>gridImage5</Badge>
+                  <Badge>gridImage6</Badge>
+                  <Badge>gridImage7</Badge>
+                  <Badge>gridImage8</Badge>
+                  <Badge>gridImage9</Badge>
                 </div>
               </div>
 
@@ -1056,9 +1056,9 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = ({ c
               <div className="mb-4">
                 <h5 className="text-sm font-semibold text-text-primary mb-2">Asset Slots (3 total):</h5>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline">selectedImage1</Badge>
-                  <Badge variant="outline">selectedImage2</Badge>
-                  <Badge variant="outline">promptText</Badge>
+                  <Badge>selectedImage1</Badge>
+                  <Badge>selectedImage2</Badge>
+                  <Badge>promptText</Badge>
                 </div>
               </div>
 
@@ -1101,7 +1101,7 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = ({ c
               <div className="mb-4">
                 <h5 className="text-sm font-semibold text-text-primary mb-2">Asset Slots (1 total):</h5>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline">generatedVideo</Badge>
+                  <Badge>generatedVideo</Badge>
                 </div>
               </div>
 
@@ -1147,8 +1147,8 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = ({ c
               <div className="mb-4">
                 <h5 className="text-sm font-semibold text-text-primary mb-2">Asset Slots:</h5>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline">No variable slots</Badge>
-                  <Badge variant="outline">Fixed branding only</Badge>
+                  <Badge>No variable slots</Badge>
+                  <Badge>Fixed branding only</Badge>
                 </div>
               </div>
 
