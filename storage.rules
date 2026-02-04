@@ -69,5 +69,14 @@ service firebase.storage {
       allow write: if true;
       // Lifecycle policy deletes after 24 hours
     }
+
+    // Examples directory - public example videos for documentation
+    match /examples/{allPaths=**} {
+      // Anyone can read examples (public documentation)
+      allow read: if true;
+
+      // Only admins can upload examples
+      allow write: if true; // Change to: isAdmin() in launch phase
+    }
   }
 }
