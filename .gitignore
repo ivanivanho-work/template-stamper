@@ -51,3 +51,6 @@ temp/
 
 # Firebase emulators
 firebase-export-*/
+# Example videos (too large for git)
+public/examples/*.mp4
+public/examples/*.mov

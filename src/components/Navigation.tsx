@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Layout, Video, Briefcase } from 'lucide-react';
+import { Home, Layout, Video, Briefcase, Images, BookOpen } from 'lucide-react';
 
 interface NavLinkProps {
   to: string;
@@ -35,8 +35,10 @@ export const Navigation: React.FC = () => {
   const navItems = [
     { to: '/', icon: <Home className="w-4 h-4" />, label: 'Home' },
     { to: '/templates', icon: <Layout className="w-4 h-4" />, label: 'Templates' },
+    { to: '/assets', icon: <Images className="w-4 h-4" />, label: 'Assets' },
     { to: '/generate', icon: <Video className="w-4 h-4" />, label: 'Generate' },
     { to: '/jobs', icon: <Briefcase className="w-4 h-4" />, label: 'Jobs' },
+    { to: '/template-guide', icon: <BookOpen className="w-4 h-4" />, label: 'Template Guide' },
   ];
 
   return (
