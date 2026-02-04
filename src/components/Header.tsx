@@ -10,20 +10,20 @@ export const Header: React.FC = () => {
   return (
     <>
       {/* Corner Ribbon Banner */}
-      <div className="fixed top-0 right-0 z-50 overflow-hidden pointer-events-none">
-        <div className="relative">
-          <div
-            className="bg-accent-red text-white text-xs font-bold uppercase tracking-wide py-1 px-12 transform rotate-45 origin-top-right shadow-lg"
-            style={{
-              position: 'absolute',
-              top: '20px',
-              right: '-35px',
-              width: '200px',
-              textAlign: 'center',
-            }}
-          >
-            Build in Progress
-          </div>
+      <div className="fixed top-0 right-0 z-50 overflow-hidden pointer-events-none" style={{ width: '150px', height: '150px' }}>
+        <div
+          className="bg-accent-red text-white text-xs font-bold uppercase tracking-wide py-1 shadow-lg"
+          style={{
+            position: 'absolute',
+            top: '32px',
+            right: '-32px',
+            width: '170px',
+            textAlign: 'center',
+            transform: 'rotate(45deg)',
+            transformOrigin: 'center',
+          }}
+        >
+          Build in Progress
         </div>
       </div>
 
