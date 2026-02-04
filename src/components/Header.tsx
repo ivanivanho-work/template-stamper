@@ -23,6 +23,11 @@ export const Header: React.FC = () => {
 
         {/* Right Actions */}
         <div className="flex items-center gap-3">
+          {/* Build in Progress Banner */}
+          <div className="bg-accent-red px-4 py-1.5 rounded-md">
+            <span className="text-white text-sm font-semibold">Build in Progress</span>
+          </div>
+
           <Button
             variant="ghost"
             size="sm"
