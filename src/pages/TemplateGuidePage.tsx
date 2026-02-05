@@ -263,9 +263,9 @@ const SlotsTab: React.FC<{ copyToClipboard: (text: string) => void }> = ({ copyT
   "id": "gridImage1",
   "type": "image",
   "constraints": {
-    "aspectRatio": "1:1",
-    "minWidth": 400,
-    "minHeight": 400,
+    "aspectRatio": "9:16",
+    "minWidth": 720,
+    "minHeight": 1280,
     "maxFileSize": 10485760,  // 10MB
     "formats": ["jpeg", "png"]
   }
@@ -274,8 +274,8 @@ const SlotsTab: React.FC<{ copyToClipboard: (text: string) => void }> = ({ copyT
         </div>
         <div className="mt-3 p-3 bg-accent-red/5 border border-accent-red/20 rounded-md">
           <p className="text-sm text-text-secondary">
-            <strong className="text-text-primary">Common aspect ratios:</strong> 1:1 (square),
-            16:9 (landscape), 9:16 (vertical), 4:3 (traditional)
+            <strong className="text-text-primary">Common aspect ratios:</strong> 9:16 (vertical),
+            16:9 (landscape), 1:1 (square), 4:3 (traditional)
           </p>
         </div>
       </div>
@@ -350,9 +350,9 @@ const SlotsTab: React.FC<{ copyToClipboard: (text: string) => void }> = ({ copyT
     "durationSeconds": 2.5
   },
   "constraints": {
-    "aspectRatio": "1:1",
-    "minWidth": 400,
-    "minHeight": 400,
+    "aspectRatio": "9:16",
+    "minWidth": 720,
+    "minHeight": 1280,
     "maxFileSize": 10485760,
     "formats": ["jpeg", "png"]
   },
@@ -434,8 +434,8 @@ const FigmaTab: React.FC = () => (
           <div className="ml-12 text-text-secondary">- UI Frame</div>
           <div className="ml-12 text-text-secondary">- Button</div>
           <div className="ml-8">📁 Content-Slots (variable)</div>
-          <div className="ml-12 text-accent-red">- [SLOT: gridImage1] 1:1 ratio</div>
-          <div className="ml-12 text-accent-red">- [SLOT: gridImage2] 1:1 ratio</div>
+          <div className="ml-12 text-accent-red">- [SLOT: gridImage1] 9:16 ratio</div>
+          <div className="ml-12 text-accent-red">- [SLOT: gridImage2] 9:16 ratio</div>
           <div className="ml-12 text-text-secondary">...</div>
           <div className="ml-8">📁 Annotations</div>
           <div className="ml-12 text-text-secondary">- Timing notes</div>
@@ -476,7 +476,7 @@ const FigmaTab: React.FC = () => (
           <h3 className="font-semibold text-text-primary mb-3">Example Layer Names</h3>
           <div className="space-y-2 font-mono text-sm">
             <div className="p-2 bg-status-online/10 rounded text-status-online">
-              [SLOT: gridImage1 | image | 1:1 | required]
+              [SLOT: gridImage1 | image | 9:16 | required]
             </div>
             <div className="p-2 bg-status-online/10 rounded text-status-online">
               [SLOT: generatedVideo | video | 9:16 | required | 0-15s]
@@ -965,7 +965,7 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = () =
                   </div>
                   <div className="grid grid-cols-3 gap-1">
                     {[...Array(9)].map((_, i) => (
-                      <div key={i} className="aspect-square bg-accent-red/20 rounded flex items-center justify-center">
+                      <div key={i} className="aspect-[9/16] bg-accent-red/20 rounded flex items-center justify-center">
                         <span className="text-[8px] text-accent-red font-mono">img{i + 1}</span>
                       </div>
                     ))}
@@ -1009,8 +1009,8 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = () =
               <div className="bg-bg-tertiary rounded-md p-3">
                 <h5 className="text-sm font-semibold text-text-primary mb-2">Constraints:</h5>
                 <ul className="text-xs text-text-secondary space-y-1">
-                  <li>• Aspect Ratio: 1:1 (square)</li>
-                  <li>• Min Size: 400x400px</li>
+                  <li>• Aspect Ratio: 9:16 (vertical)</li>
+                  <li>• Min Size: 720x1280px</li>
                   <li>• Max File Size: 10MB per image</li>
                   <li>• Formats: JPEG, PNG</li>
                 </ul>
@@ -1026,10 +1026,10 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = () =
               <div className="aspect-[9/16] bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-lg border border-border-subtle overflow-hidden">
                 <div className="p-3">
                   <div className="flex gap-2 mb-3">
-                    <div className="w-12 h-12 bg-accent-red/20 rounded flex items-center justify-center">
+                    <div className="w-12 aspect-[9/16] bg-accent-red/20 rounded flex items-center justify-center">
                       <span className="text-[8px] text-accent-red">img1</span>
                     </div>
-                    <div className="w-12 h-12 bg-accent-red/20 rounded flex items-center justify-center">
+                    <div className="w-12 aspect-[9/16] bg-accent-red/20 rounded flex items-center justify-center">
                       <span className="text-[8px] text-accent-red">img2</span>
                     </div>
                   </div>
@@ -1065,7 +1065,7 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = () =
               <div className="bg-bg-tertiary rounded-md p-3">
                 <h5 className="text-sm font-semibold text-text-primary mb-2">Constraints:</h5>
                 <ul className="text-xs text-text-secondary space-y-1">
-                  <li>• Images: 1:1 aspect ratio, same as grid images</li>
+                  <li>• Images: 9:16 aspect ratio, same as grid images</li>
                   <li>• Text: Max 100 characters</li>
                   <li>• Font: Roboto, 20px</li>
                 </ul>
@@ -1190,9 +1190,9 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = () =
         "durationSeconds": 2.5
       },
       "constraints": {
-        "aspectRatio": "1:1",
-        "minWidth": 400,
-        "minHeight": 400,
+        "aspectRatio": "9:16",
+        "minWidth": 720,
+        "minHeight": 1280,
         "maxFileSize": 10485760,
         "formats": ["jpeg", "png"]
       },
