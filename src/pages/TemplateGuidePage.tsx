@@ -1026,10 +1026,10 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = () =
               <div className="aspect-[9/16] bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-lg border border-border-subtle overflow-hidden">
                 <div className="p-3">
                   <div className="flex gap-2 mb-3">
-                    <div className="w-12 aspect-[9/16] bg-accent-red/20 rounded flex items-center justify-center">
+                    <div className="w-12 h-12 bg-accent-red/20 rounded flex items-center justify-center">
                       <span className="text-[8px] text-accent-red">img1</span>
                     </div>
-                    <div className="w-12 aspect-[9/16] bg-accent-red/20 rounded flex items-center justify-center">
+                    <div className="w-12 h-12 bg-accent-red/20 rounded flex items-center justify-center">
                       <span className="text-[8px] text-accent-red">img2</span>
                     </div>
                   </div>
@@ -1065,7 +1065,7 @@ const ReferenceTab: React.FC<{ copyToClipboard: (text: string) => void }> = () =
               <div className="bg-bg-tertiary rounded-md p-3">
                 <h5 className="text-sm font-semibold text-text-primary mb-2">Constraints:</h5>
                 <ul className="text-xs text-text-secondary space-y-1">
-                  <li>• Images: 9:16 aspect ratio, same as grid images</li>
+                  <li>• Images: 1:1 aspect ratio (square)</li>
                   <li>• Text: Max 100 characters</li>
                   <li>• Font: Roboto, 20px</li>
                 </ul>
