@@ -17,7 +17,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@remotion/lambda": "^4.0.411",
+    "@remotion/bundler": "^4.0.411",
     "@remotion/renderer": "^4.0.411",
     "busboy": "^1.6.0",
     "cors": "^2.8.5",
