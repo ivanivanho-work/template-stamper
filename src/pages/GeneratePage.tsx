@@ -4,7 +4,10 @@ import { Card, Button, Select } from '../components/ui';
 import { TemplateSelector } from '../components/generate/TemplateSelector';
 import { AssetSlotMapper, SlotAsset } from '../components/generate/AssetSlotMapper';
 import { GenerationProgress } from '../components/generate/GenerationProgress';
+import { AssetGallery } from '../components/assets/AssetGallery';
+import { AssetUploadModal } from '../components/assets/AssetUploadModal';
 import { useTemplates } from '../hooks/useTemplates';
+import { useAssets } from '../hooks/useAssets';
 import { useAssetUpload } from '../hooks/useAssetUpload';
 import { useJobCreate } from '../hooks/useJobCreate';
 import { useJobStatus } from '../hooks/useJobStatus';
@@ -19,6 +22,7 @@ const MARKETS = [
 
 function GeneratePage() {
   const { templates, loading: templatesLoading } = useTemplates();
+  const { assets, loading: assetsLoading, uploadAsset } = useAssets();
   const { uploadMultiple, uploading } = useAssetUpload();
   const { createJob, creating } = useJobCreate();
   const [currentJobId, setCurrentJobId] = useState<string | null>(null);
@@ -27,6 +31,7 @@ function GeneratePage() {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [selectedMarket, setSelectedMarket] = useState<string>('japan');
   const [slotAssets, setSlotAssets] = useState<SlotAsset[]>([]);
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   const selectedTemplate = templates.find((t) => t.id === selectedTemplateId);
 
@@ -142,6 +147,31 @@ function GeneratePage() {
 
   const isComplete = jobStatus?.status === 'completed';
 
+  const handleUploadAssets = async (files: File[]) => {
+    try {
+      await Promise.all(files.map(file => uploadAsset(file, 'manual')));
+      setShowUploadModal(false);
+    } catch (error) {
+      console.error('Failed to upload assets:', error);
+    }
+  };
+
+  // Left Panel Content - Asset Gallery
+  const leftPanelContent = selectedTemplate && (
+    <>
+      <AssetGallery
+        assets={assets}
+        loading={assetsLoading}
+        onUploadClick={() => setShowUploadModal(true)}
+      />
+      <AssetUploadModal
+        isOpen={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        onUpload={handleUploadAssets}
+      />
+    </>
+  );
+
   // Right Sidebar Content
   const rightSidebarContent = selectedTemplate && (
     <div className="space-y-4">
@@ -221,6 +251,8 @@ function GeneratePage() {
     <AppLayout
       title="Generate Video"
       subtitle="Create a new video from a template"
+      leftPanel={leftPanelContent}
+      leftPanelVisible={!!selectedTemplate}
       rightSidebar={rightSidebarContent}
       rightSidebarVisible={!!selectedTemplate}
       actions={

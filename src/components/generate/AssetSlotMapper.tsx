@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { UploadArea } from '../ui/UploadArea';
 import { Input } from '../ui/Input';
 import { Badge } from '../ui/Badge';
 import { TemplateSlot } from '../../hooks/useTemplates';
+import { Asset } from '../../hooks/useAssets';
 import { CheckCircle2, Circle } from 'lucide-react';
 
 export interface SlotAsset {
@@ -29,6 +30,8 @@ export const AssetSlotMapper: React.FC<AssetSlotMapperProps> = ({
   onTextChanged,
   disabled = false,
 }) => {
+  const [dragOverSlotId, setDragOverSlotId] = useState<string | null>(null);
+
   const getSlotAsset = (slotId: string): SlotAsset | undefined => {
     return slotAssets.find((sa) => sa.slotId === slotId);
   };
@@ -51,6 +54,48 @@ export const AssetSlotMapper: React.FC<AssetSlotMapperProps> = ({
   const completedCount = slots.filter((slot) =>
     isSlotComplete(slot, getSlotAsset(slot.slotId))
   ).length;
+
+  // Handle drop from asset gallery
+  const handleDrop = async (e: React.DragEvent, slotId: string, slotType: 'image' | 'video') => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOverSlotId(null);
+
+    try {
+      // Try to get asset data from gallery
+      const assetData = e.dataTransfer.getData('application/json');
+      if (assetData) {
+        const asset: Asset = JSON.parse(assetData);
+
+        // Check if asset type matches slot type
+        if (asset.type !== slotType) {
+          console.warn(`Asset type ${asset.type} doesn't match slot type ${slotType}`);
+          return;
+        }
+
+        // Fetch the asset from storage URL and convert to File
+        const response = await fetch(asset.storageUrl);
+        const blob = await response.blob();
+        const file = new File([blob], asset.name, { type: asset.mimeType });
+
+        onAssetAdded(slotId, file);
+      }
+    } catch (error) {
+      console.error('Failed to handle dropped asset:', error);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent, slotId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOverSlotId(slotId);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOverSlotId(null);
+  };
 
   return (
     <Card>
@@ -111,15 +156,25 @@ export const AssetSlotMapper: React.FC<AssetSlotMapperProps> = ({
 
                 {/* File Upload for image/video slots */}
                 {(slot.type === 'image' || slot.type === 'video') && (
-                  <UploadArea
-                    onFilesAdded={(files) => files[0] && onAssetAdded(slot.slotId, files[0])}
-                    onFileRemove={() => onAssetRemoved(slot.slotId)}
-                    uploadedFiles={slotAsset?.file ? [{ file: slotAsset.file }] : []}
-                    accept={getAcceptedTypes(slot.type)}
-                    maxFiles={1}
-                    disabled={disabled}
-                    helperText={`Upload ${slot.type} (max 100MB)`}
-                  />
+                  <div
+                    onDrop={(e) => handleDrop(e, slot.slotId, slot.type as 'image' | 'video')}
+                    onDragOver={(e) => handleDragOver(e, slot.slotId)}
+                    onDragLeave={handleDragLeave}
+                    className={`
+                      transition-all duration-200 rounded-lg
+                      ${dragOverSlotId === slot.slotId ? 'ring-2 ring-accent-red ring-offset-2' : ''}
+                    `}
+                  >
+                    <UploadArea
+                      onFilesAdded={(files) => files[0] && onAssetAdded(slot.slotId, files[0])}
+                      onFileRemove={() => onAssetRemoved(slot.slotId)}
+                      uploadedFiles={slotAsset?.file ? [{ file: slotAsset.file }] : []}
+                      accept={getAcceptedTypes(slot.type)}
+                      maxFiles={1}
+                      disabled={disabled}
+                      helperText={`Upload ${slot.type} or drag from gallery (max 100MB)`}
+                    />
+                  </div>
                 )}
               </div>
             );

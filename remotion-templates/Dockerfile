@@ -30,5 +30,5 @@ COPY . .
 # Expose port for Cloud Run
 EXPOSE 8080
 
-# Start Remotion Cloud Run service
-CMD ["npx", "@remotion/cloudrun", "serve", "--port", "8080"]
+# Start HTTP server
+CMD ["node", "server.js"]

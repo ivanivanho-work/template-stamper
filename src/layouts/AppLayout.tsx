@@ -5,6 +5,8 @@ import { MainContent, MainContentProps } from './MainContent';
 import { RightSidebar } from './RightSidebar';
 
 export interface AppLayoutProps extends MainContentProps {
+  leftPanel?: React.ReactNode;
+  leftPanelVisible?: boolean;
   rightSidebar?: React.ReactNode;
   rightSidebarVisible?: boolean;
 }
@@ -14,6 +16,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   title,
   subtitle,
   actions,
+  leftPanel,
+  leftPanelVisible = false,
   rightSidebar,
   rightSidebarVisible = false,
 }) => {
@@ -22,10 +26,17 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       {/* Header - Full Width */}
       <Header />
 
-      {/* Three-Column Layout */}
+      {/* Multi-Column Layout */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - Navigation */}
         <LeftSidebar />
+
+        {/* Left Panel - Asset Gallery (Conditional) */}
+        {leftPanelVisible && (
+          <div className="w-80 border-r border-border-subtle bg-bg-primary overflow-hidden">
+            {leftPanel}
+          </div>
+        )}
 
         {/* Main Content - Flexible */}
         <MainContent title={title} subtitle={subtitle} actions={actions}>

@@ -1,23 +1,21 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import {renderMedia} from '@remotion/renderer';
-import path from 'path';
-import os from 'os';
-import fs from 'fs';
 
 const db = admin.firestore();
 const storage = admin.storage();
+
+const CLOUD_RUN_URL = 'https://remotion-render-846225698038.us-central1.run.app';
 
 /**
  * Trigger Remotion rendering when a job is created
  * Firestore trigger: onCreate('jobs/{jobId}')
  *
- * Now renders directly in Cloud Functions using @remotion/renderer
+ * Calls Cloud Run service to render videos
  */
 export const triggerRemotionRender = functions
   .runWith({
     timeoutSeconds: 540, // 9 minutes max for Cloud Functions
-    memory: '8GB',
+    memory: '2GB', // Reduced since we're just making HTTP calls
   })
   .firestore.document('jobs/{jobId}')
   .onCreate(async (snap, context) => {
@@ -60,51 +58,50 @@ export const triggerRemotionRender = functions
         startedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
 
-      functions.logger.info('Starting Remotion render', {
+      functions.logger.info('Calling Cloud Run render service', {
         jobId,
         composition: template.remotionCompositionId,
         serveUrl: template.remotionServeUrl,
+        cloudRunUrl: CLOUD_RUN_URL,
       });
 
-      // 5. Create temporary directory for output
-      const tmpDir = os.tmpdir();
-      const outputPath = path.join(tmpDir, `${jobId}.mp4`);
-
-      // 6. Render the video using @remotion/renderer
-      await renderMedia({
-        serveUrl: template.remotionServeUrl,
-        composition: template.remotionCompositionId,
-        codec: 'h264',
-        inputProps: {
-          ...inputProps,
-          ...assetsWithSignedUrls,
+      // 5. Call Cloud Run service to render
+      const response = await fetch(`${CLOUD_RUN_URL}/render`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        outputLocation: outputPath,
-        onProgress: ({progress}) => {
-          // Update progress in Firestore
-          db.collection('jobs')
-            .doc(jobId)
-            .update({
-              progress: Math.round(progress * 100),
-            })
-            .catch((err) =>
-              functions.logger.error('Failed to update progress', err)
-            );
-        },
+        body: JSON.stringify({
+          serveUrl: template.remotionServeUrl,
+          composition: template.remotionCompositionId,
+          inputProps: {
+            ...inputProps,
+            ...assetsWithSignedUrls,
+          },
+        }),
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Cloud Run render failed: ${response.status} - ${errorText}`);
+      }
+
+      const result = await response.json();
 
       functions.logger.info('Render completed, uploading to storage', {
         jobId,
-        outputPath,
+        videoSize: result.size,
       });
+
+      // 6. Convert base64 video to buffer
+      const videoBuffer = Buffer.from(result.video, 'base64');
 
       // 7. Upload rendered video to Cloud Storage
       const firebaseStoragePath = `videos/${jobId}/output.mp4`;
       const bucket = storage.bucket();
       const file = bucket.file(firebaseStoragePath);
 
-      await bucket.upload(outputPath, {
-        destination: firebaseStoragePath,
+      await file.save(videoBuffer, {
         metadata: {
           contentType: 'video/mp4',
           metadata: {
@@ -121,10 +118,7 @@ export const triggerRemotionRender = functions
         expires: Date.now() + 365 * 24 * 60 * 60 * 1000,
       });
 
-      // 9. Clean up temporary file
-      fs.unlinkSync(outputPath);
-
-      // 10. Update job as completed
+      // 9. Update job as completed
       await db.collection('jobs').doc(jobId).update({
         status: 'completed',
         progress: 100,
