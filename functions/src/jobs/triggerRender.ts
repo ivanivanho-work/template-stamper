@@ -172,6 +172,7 @@ async function prepareInputProps(
 
 /**
  * Generate signed URLs for assets (valid for 1 hour)
+ * Only processes assets that start with gs:// (Cloud Storage URLs)
  */
 async function generateSignedUrls(
   assetMappings: any[]
@@ -180,6 +181,11 @@ async function generateSignedUrls(
   const signedUrls: Record<string, string> = {};
 
   for (const mapping of assetMappings) {
+    // Skip if not a Cloud Storage URL (e.g., text values or direct URLs)
+    if (!mapping.assetUrl || !mapping.assetUrl.startsWith('gs://')) {
+      continue;
+    }
+
     const filePath = mapping.assetUrl.replace('gs://' + bucket.name + '/', '');
     const file = bucket.file(filePath);
 
