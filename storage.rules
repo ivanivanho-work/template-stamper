@@ -78,5 +78,14 @@ service firebase.storage {
       // Only admins can upload examples
       allow write: if true; // Change to: isAdmin() in launch phase
     }
+
+    // Remotion bundle directory - public Remotion project bundle
+    match /remotion-bundle/{allPaths=**} {
+      // Anyone can read Remotion bundle (needed for Cloud Run rendering)
+      allow read: if true;
+
+      // Only admins/functions can upload
+      allow write: if true; // Change to: isAdmin() in launch phase
+    }
   }
 }

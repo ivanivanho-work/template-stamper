@@ -1,10 +1,24 @@
 import React from 'react';
 import {Composition} from 'remotion';
 import {VeoShortsV1} from './compositions/VeoShortsV1';
+import {SimpleTest} from './compositions/SimpleTest';
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="simple-test"
+        component={SimpleTest}
+        durationInFrames={120}
+        fps={30}
+        width={720}
+        height={1280}
+        defaultProps={{
+          titleText: 'Template Stamper Test',
+          titleColor: '#4A90E2',
+        }}
+      />
+
       <Composition
         id="veo-shorts-v1"
         component={VeoShortsV1}
